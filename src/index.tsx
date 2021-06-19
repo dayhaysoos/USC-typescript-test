@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { CartProvider } from 'use-shopping-cart';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <CartProvider stripe='string' cartMode='checkout-session' currency='USD'>
+      <App />
+    </CartProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
