@@ -1,3 +1,4 @@
+import { FormEvent } from 'react';
 import { useShoppingCart } from 'use-shopping-cart';
 
 const CartDisplay = () => {
@@ -10,7 +11,7 @@ const CartDisplay = () => {
     setItemQuantity,
   } = useShoppingCart();
 
-  const handleSubmit = async (event: Event) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     const response = await fetch('/.netlify/functions/create-session', {
@@ -71,8 +72,8 @@ const CartDisplay = () => {
         })}
         <h3>Total Items in Cart: {cartCount}</h3>
         <h3>Total Price: {formattedTotalPrice}</h3>
-        <form action={'/.netlify/functions/create-session'} method='POST'>
-          <button onClick={() => console.log('lol')}>Checkout</button>
+        <form method='POST'>
+          <button onClick={handleSubmit}>Checkout</button>
         </form>
         <button onClick={() => clearCart()}>Clear Cart Items</button>
       </div>
