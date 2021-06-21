@@ -1,6 +1,6 @@
-const stripe = require('stripe')(process.env.STRIPE_API_SECRET)
-const validateCartItems = require('use-shopping-cart/utilities')
-  .validateCartItems
+const stripe = require('stripe')(process.env.STRIPE_API_SECRET);
+const validateCartItems =
+  require('use-shopping-cart/utilities').validateCartItems;
 
 /*
  * Product data can be loaded from anywhere. In this case, we’re loading it from
@@ -10,7 +10,7 @@ const validateCartItems = require('use-shopping-cart/utilities')
  * The important thing is that the product info is loaded from somewhere trusted
  * so you know the pricing information is accurate.
  */
-const inventory = require('./data/products.json')
+const inventory = require('./data/products.json');
 
 /*
  * This function creates a Stripe Checkout session and returns the session ID
@@ -19,39 +19,39 @@ const inventory = require('./data/products.json')
  * @see https://stripe.com/docs/payments/checkout/one-time
  */
 exports.handler = async (event) => {
-  let product
+  let product;
   try {
-    product = JSON.parse(event.body)
+    product = JSON.parse(event.body);
   } catch (error) {
     return {
       statusCode: 400,
       body: JSON.stringify({
         message: 'Received malformed JSON.',
-        error: error.message
-      })
-    }
+        error: error.message,
+      }),
+    };
   }
 
-  let line_items
+  let line_items;
   try {
-    line_items = validateCartItems(inventory, product)
+    line_items = validateCartItems(inventory, product);
   } catch (error) {
     return {
       statusCode: 422,
       body: JSON.stringify({
         message: 'Some of the items in your cart are invalid.',
-        error: error.message
-      })
-    }
+        error: error.message,
+      }),
+    };
   }
 
-  let session
+  let session;
   try {
     session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       billing_address_collection: 'auto',
       shipping_address_collection: {
-        allowed_countries: ['US', 'CA']
+        allowed_countries: ['US', 'CA'],
       },
       mode: 'payment',
       /*
@@ -62,20 +62,20 @@ exports.handler = async (event) => {
        */
       success_url: `${process.env.URL}/success.html`,
       cancel_url: process.env.URL,
-      line_items
-    })
+      line_items,
+    });
   } catch (error) {
     return {
       statusCode: 500,
       body: JSON.stringify({
         message: 'While communicating with Stripe, we encountered an error.',
-        error: error.message
-      })
-    }
+        error: error.message,
+      }),
+    };
   }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ sessionId: session.id })
-  }
-}
+    body: JSON.stringify({ sessionId: session.id }),
+  };
+};

@@ -33,7 +33,7 @@ function App() {
         }}>
         <section>
           {products.map((product: Product) => {
-            return <Item product={product} />;
+            return <Item key={product.name} product={product} />;
           })}
         </section>
         <section>

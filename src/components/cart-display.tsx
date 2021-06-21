@@ -48,7 +48,7 @@ const CartDisplay = () => {
           const { name, quantity, image } = cartDetails[sku];
           return (
             <div
-              key={sku}
+              key={name}
               style={{
                 justifyContent: 'space-around',
                 alignItems: 'center',
